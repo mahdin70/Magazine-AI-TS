@@ -100,7 +100,7 @@ async function startChat(): Promise<void> {
           .filter((content): content is string => typeof content === "string");
 
         try {
-          const response = await llm.invoke(messages); 
+          const response = await llm.invoke(messages);
           stopSpinner();
 
           const endTime: number = Date.now();
