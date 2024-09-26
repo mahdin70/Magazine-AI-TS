@@ -21,7 +21,7 @@ const mongodb_1 = require("mongodb");
 const pageExtractor_1 = require("./pageExtractor");
 const mongoUri = process.env.MONGO_URI || "";
 const client = new mongodb_1.MongoClient(mongoUri);
-const dbName = "MagazineAIChatDatabase";
+const dbName = "MagazineAIContextDB";
 let db;
 let chatCollection;
 function initMongo() {
@@ -29,7 +29,7 @@ function initMongo() {
         try {
             yield client.connect();
             db = client.db(dbName);
-            chatCollection = db.collection("NewChatHistory");
+            chatCollection = db.collection("ContextThread");
             console.log("MongoDB connected and collection initialized.");
         }
         catch (error) {

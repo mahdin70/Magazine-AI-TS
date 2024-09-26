@@ -21,7 +21,6 @@ export async function generateMagazine(
     temperature: 0.5,
     maxTokens: 16384,
     topP: 0.5,
-    presencePenalty: 0.8,
   });
 
   const history = new InMemoryChatMessageHistory();

@@ -1,7 +1,8 @@
 import readline from "readline";
 import { getTotalPages } from "./pageExtractor";
 import { generateMagazine } from "./aiInteraction";
-import { fetchPreviousContext, initMongo } from "./paginationDBInteraction";
+import { initMongo } from "./paginationDBInteraction";
+import { showPreviousContext } from "./showPreviousContext";
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -12,24 +13,14 @@ const rl = readline.createInterface({
 export async function startChat(): Promise<void> {
   try {
     await initMongo();
-    const previousContext = await fetchPreviousContext();
-
-    let latestUserPrompt: string = "";
-    let latestAIReply: string = "";
-
+    const previousContext = await showPreviousContext();
     if (previousContext) {
-      latestUserPrompt = previousContext.latestUserPrompt || "";
-      if (previousContext.latestAIReply && Array.isArray(previousContext.latestAIReply.pages)) {
-        latestAIReply = previousContext.latestAIReply.pages
-          .map((page: { content: string }) => page.content)
-          .filter((content: string) => content)
-          .join("\n\n\n");
-      }
-    }
+      const { latestUserPrompt, latestAIReply } = previousContext;
 
-    if (latestUserPrompt && latestAIReply) {
-      console.log(`\nPrevious User Prompt:\n${latestUserPrompt}`);
-      console.log(`Previous Magazine-AI Reply:\n${latestAIReply}`);
+      if (latestUserPrompt && latestAIReply) {
+        console.log(`\nPrevious User Prompt:\n${latestUserPrompt}`);
+        console.log(`\nPrevious Magazine-AI Reply:\n${latestAIReply}`);
+      }
     }
 
     const totalPages = getTotalPages();
@@ -45,7 +36,7 @@ export async function startChat(): Promise<void> {
         return;
       }
 
-      await generateMagazine(userInput,(pageNumber, content, tokenUsage) => {
+      await generateMagazine(userInput, (pageNumber, content, tokenUsage) => {
         console.log(`\rPage ${pageNumber} - Magazine-AI: ${content}`);
         if (tokenUsage) {
           console.log("===================================================================================");

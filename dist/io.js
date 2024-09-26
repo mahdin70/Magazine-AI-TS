@@ -17,6 +17,7 @@ const readline_1 = __importDefault(require("readline"));
 const pageExtractor_1 = require("./pageExtractor");
 const aiInteraction_1 = require("./aiInteraction");
 const paginationDBInteraction_1 = require("./paginationDBInteraction");
+const showPreviousContext_1 = require("./showPreviousContext");
 const rl = readline_1.default.createInterface({
     input: process.stdin,
     output: process.stdout,
@@ -26,21 +27,13 @@ function startChat() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             yield (0, paginationDBInteraction_1.initMongo)();
-            const previousContext = yield (0, paginationDBInteraction_1.fetchPreviousContext)();
-            let latestUserPrompt = "";
-            let latestAIReply = "";
+            const previousContext = yield (0, showPreviousContext_1.showPreviousContext)();
             if (previousContext) {
-                latestUserPrompt = previousContext.latestUserPrompt || "";
-                if (previousContext.latestAIReply && Array.isArray(previousContext.latestAIReply.pages)) {
-                    latestAIReply = previousContext.latestAIReply.pages
-                        .map((page) => page.content)
-                        .filter((content) => content)
-                        .join("\n\n\n");
+                const { latestUserPrompt, latestAIReply } = previousContext;
+                if (latestUserPrompt && latestAIReply) {
+                    console.log(`\nPrevious User Prompt:\n${latestUserPrompt}`);
+                    console.log(`\nPrevious Magazine-AI Reply:\n${latestAIReply}`);
                 }
-            }
-            if (latestUserPrompt && latestAIReply) {
-                console.log(`\nPrevious User Prompt:\n${latestUserPrompt}`);
-                console.log(`Previous Magazine-AI Reply:\n${latestAIReply}`);
             }
             const totalPages = (0, pageExtractor_1.getTotalPages)();
             console.log("======================================================================================");

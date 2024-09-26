@@ -7,7 +7,7 @@ import { getLayoutDetailsForPage, getTextFromLayoutForPage } from "./pageExtract
 const mongoUri: string = process.env.MONGO_URI || "";
 const client: MongoClient = new MongoClient(mongoUri);
 
-const dbName: string = "MagazineAIChatDatabase";
+const dbName: string = "MagazineAIContextDB";
 let db: any;
 let chatCollection: any;
 
@@ -15,7 +15,7 @@ async function initMongo(): Promise<void> {
   try {
     await client.connect();
     db = client.db(dbName);
-    chatCollection = db.collection("NewChatHistory");
+    chatCollection = db.collection("ContextThread");
     console.log("MongoDB connected and collection initialized.");
   } catch (error) {
     console.error("Error connecting to MongoDB", error);
