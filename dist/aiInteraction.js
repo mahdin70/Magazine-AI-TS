@@ -28,10 +28,9 @@ function generateMagazine(userInput, callback) {
         const llm = new openai_1.ChatOpenAI({
             model: "gpt-4o-mini",
             openAIApiKey: openaiApiKey,
-            //temperature: 0.5,
-            //maxTokens: 16384,
-            //topP: 0.5,
-            //presencePenalty: 0.8,
+            temperature: 0.5,
+            maxTokens: 16384,
+            topP: 0.5,
         });
         const history = new chat_history_1.InMemoryChatMessageHistory();
         const totalPages = (0, pageExtractor_1.getTotalPages)();
