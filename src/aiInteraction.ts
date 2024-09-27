@@ -34,22 +34,20 @@ export async function generateMagazine(
     presencePenalty: 0.8,
   });
 
-
   // Initialize in-memory message history to track conversation context
   const history = new InMemoryChatMessageHistory();
 
   const totalPages = getTotalPages();
 
-
   // Loop through each page number for content generation
   for (let pageNumber = 1; pageNumber <= totalPages; pageNumber++) {
-    startSpinner(pageNumber, "Contents of the Magazine");     // Start the spinner for content generation
+    startSpinner(pageNumber, "Contents of the Magazine"); // Start the spinner for content generation
 
     const systemMessage = getPaginationSystemMessage(pageNumber);
-    history.addMessage(systemMessage);                        // Add system message to history
+    history.addMessage(systemMessage); // Add system message to history
     const userMessage = new HumanMessage(userInput);
-    history.addMessage(userMessage);                          // Add user message to history
-    await appendMessage(pageNumber, "user", userInput);       // Append user message to the database
+    history.addMessage(userMessage); // Add user message to history
+    await appendMessage(pageNumber, "user", userInput); // Append user message to the database
 
     try {
       // Construct the message array from history and invoke the OpenAI model
@@ -61,12 +59,12 @@ export async function generateMagazine(
       const content = Array.isArray(response.content) ? response.content.map((item: any) => item.text).join(" ") : response.content;
 
       const aiMessage = new AIMessage(content);
-      history.addMessage(aiMessage);                          // Add AI response to history
-      await appendMessage(pageNumber, "ai", content);         // Append AI response to the database
-      const tokenUsage = response.usage_metadata;             // Retrieve token usage metadata
+      history.addMessage(aiMessage); // Add AI response to history
+      await appendMessage(pageNumber, "ai", content); // Append AI response to the database
+      const tokenUsage = response.usage_metadata; // Retrieve token usage metadata
 
       stopSpinner();
-      callback(pageNumber, content, tokenUsage);              // Call the callback function with generated data
+      callback(pageNumber, content, tokenUsage); // Call the callback function with generated data
     } catch (error) {
       console.error(`Error generating content for page ${pageNumber}:`, error);
       stopSpinner();

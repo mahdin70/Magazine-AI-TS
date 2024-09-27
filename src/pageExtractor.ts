@@ -1,6 +1,6 @@
 import fs from "fs";
 
-const filePath: string = "F:/Artisan/Magazine-AI-TS/Texract-JSON/MedicalAnalyzeDocResponse.json"
+const filePath: string = "F:/Artisan/Magazine-AI-TS/Texract-JSON/MedicalAnalyzeDocResponse.json";
 interface Block {
   Id: string;
   BlockType: string;
@@ -9,8 +9,6 @@ interface Block {
   Relationships?: Array<{ Ids: string[] }>;
 }
 
-
-
 /**
  * Loads the data from a JSON file containing Textract-analyzed blocks.
  * @returns An object with an array of Block objects parsed from the JSON file.
@@ -18,8 +16,6 @@ interface Block {
 const loadData = (): { Blocks: Block[] } => {
   return JSON.parse(fs.readFileSync(filePath, "utf8"));
 };
-
-
 
 /**
  * Retrieves the total number of pages in the document by counting the blocks of type 'PAGE'.
@@ -31,8 +27,6 @@ const getTotalPages = (): number => {
   return pageBlocks.length;
 };
 
-
-
 /**
  * Finds and returns a block by its ID.
  * @param data - The loaded document data containing block information.
@@ -42,8 +36,6 @@ const getTotalPages = (): number => {
 const getBlockById = (data: { Blocks: Block[] }, blockId: string): Block | undefined => {
   return data.Blocks.find((block: Block) => block.Id === blockId);
 };
-
-
 
 /**
  * Counts the number of words in a LINE block by counting its related WORD blocks.
@@ -60,8 +52,6 @@ const getWordCountFromLine = (data: { Blocks: Block[] }, lineBlock: Block): numb
   return words.reduce((count, wordBlock) => count + (wordBlock.Text || "").split(" ").length, 0);
 };
 
-
-
 /**
  * Counts the total number of words in a parent block (LAYOUT_TEXT, LAYOUT_SECTION_HEADER, etc.)
  * by counting the words in all of its child LINE blocks.
@@ -77,8 +67,6 @@ const getWordCountFromParent = (data: { Blocks: Block[] }, parentBlock: Block): 
 
   return lines.reduce((count, line) => count + getWordCountFromLine(data, line), 0);
 };
-
-
 
 /**
  * Renders a block's type and word count and processes its child blocks recursively.
@@ -106,8 +94,6 @@ const renderBlockWithCounts = (data: { Blocks: Block[] }, block: Block, blockCou
   });
   return output;
 };
-
-
 
 /**
  * Extracts and returns the layout details (block type and word count) for a specified page.
@@ -143,8 +129,6 @@ const getLayoutDetailsForPage = (pageNumber: number): string => {
   return layoutDetails;
 };
 
-
-
 /**
  * Recursively extracts text from a block and its child blocks.
  * @param data - The loaded document data.
@@ -169,8 +153,6 @@ const extractTextFromBlock = (data: { Blocks: Block[] }, block: Block): string =
 
   return textContent.trim();
 };
-
-
 
 /**
  * Extracts and returns the text content for layout blocks (title, section header, text, header, footer)

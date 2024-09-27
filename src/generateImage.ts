@@ -27,13 +27,14 @@ async function generatePrompt(parsedContent: string, pageNumber: number): Promis
       messages: [
         {
           role: "system",
-          content: "You are a helpful assistant that specializes in generating detailed, realistic prompts for photo-realistic image generation."
+          content:
+            "You are a helpful assistant that specializes in generating detailed, realistic prompts for photo-realistic image generation.",
         },
         {
           role: "user",
-          content: `Generate a detailed and realistic image prompt based on the following content, focusing on lifelike elements, textures, and natural lighting: ${parsedContent}`
-        }
-      ]
+          content: `Generate a detailed and realistic image prompt based on the following content, focusing on lifelike elements, textures, and natural lighting: ${parsedContent}`,
+        },
+      ],
     });
     stopSpinner();
 
