@@ -95,4 +95,3 @@ async function generateImagesForAllPages(): Promise<void> {
 }
 
 generateImagesForAllPages().catch((error) => console.error("Error in image generation process:", error));
-// will be moved to a separate file

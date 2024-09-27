@@ -107,3 +107,4 @@ function generateImagesForAllPages() {
     });
 }
 generateImagesForAllPages().catch((error) => console.error("Error in image generation process:", error));
+// will be moved to a separate file
