@@ -5,7 +5,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "tsc && node dist/io.js",
-    "dev": "ts-node src/io.ts"
+    "dev": "ts-node src/generateImage.ts"
   },
   "keywords": [],
   "author": "",

@@ -105,7 +105,6 @@ const renderBlockWithCounts = (data: { Blocks: Block[] }, block: Block, blockCou
       output += renderBlockWithCounts(data, childBlock, blockCounts);
     }
   });
-
   return output;
 };
 

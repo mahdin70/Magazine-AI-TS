@@ -23,8 +23,19 @@ const pageExtractor_1 = require("./pageExtractor");
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const openaiApiKey = process.env.OPENAI_API_KEY;
+/**
+ * Generates magazine content by interacting with the OpenAI API
+ * and handling pagination for multiple pages.
+ *
+ * @param userInput - The input provided by the user for content generation.
+ * @param callback - A callback function that is invoked after each page is generated.
+ *                    It receives the page number, generated content, and token usage metadata.
+ *
+ * @returns A promise that resolves when the content generation is complete.
+ */
 function generateMagazine(userInput, callback) {
     return __awaiter(this, void 0, void 0, function* () {
+        // Initialize the OpenAI model with specified configurations
         const llm = new openai_1.ChatOpenAI({
             model: "gpt-4o-mini",
             openAIApiKey: openaiApiKey,
@@ -33,27 +44,30 @@ function generateMagazine(userInput, callback) {
             topP: 0.5,
             presencePenalty: 0.8,
         });
+        // Initialize in-memory message history to track conversation context
         const history = new chat_history_1.InMemoryChatMessageHistory();
         const totalPages = (0, pageExtractor_1.getTotalPages)();
+        // Loop through each page number for content generation
         for (let pageNumber = 1; pageNumber <= totalPages; pageNumber++) {
-            (0, spinner_1.startSpinner)(pageNumber);
+            (0, spinner_1.startSpinner)(pageNumber, "Contents of the Magazine"); // Start the spinner for content generation
             const systemMessage = (0, paginationSystemMessage_1.getPaginationSystemMessage)(pageNumber);
-            history.addMessage(systemMessage);
+            history.addMessage(systemMessage); // Add system message to history
             const userMessage = new messages_1.HumanMessage(userInput);
-            history.addMessage(userMessage);
-            yield (0, paginationDBInteraction_1.appendMessage)(pageNumber, "user", userInput);
+            history.addMessage(userMessage); // Add user message to history
+            yield (0, paginationDBInteraction_1.appendMessage)(pageNumber, "user", userInput); // Append user message to the database
             try {
+                // Construct the message array from history and invoke the OpenAI model
                 const messages = (yield history.getMessages())
                     .map((message) => message.content)
                     .filter((content) => typeof content === "string");
                 const response = yield llm.invoke(messages);
                 const content = Array.isArray(response.content) ? response.content.map((item) => item.text).join(" ") : response.content;
                 const aiMessage = new messages_1.AIMessage(content);
-                history.addMessage(aiMessage);
-                yield (0, paginationDBInteraction_1.appendMessage)(pageNumber, "ai", content);
-                const tokenUsage = response.usage_metadata;
+                history.addMessage(aiMessage); // Add AI response to history
+                yield (0, paginationDBInteraction_1.appendMessage)(pageNumber, "ai", content); // Append AI response to the database
+                const tokenUsage = response.usage_metadata; // Retrieve token usage metadata
                 (0, spinner_1.stopSpinner)();
-                callback(pageNumber, content, tokenUsage);
+                callback(pageNumber, content, tokenUsage); // Call the callback function with generated data
             }
             catch (error) {
                 console.error(`Error generating content for page ${pageNumber}:`, error);

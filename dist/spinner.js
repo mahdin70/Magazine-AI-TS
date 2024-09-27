@@ -5,9 +5,9 @@ exports.stopSpinner = stopSpinner;
 let spinnerChars = ["|", "/", "-", "\\"];
 let spinnerIndex = 0;
 let spinnerInterval;
-function startSpinner(pageNumber) {
+function startSpinner(pageNumber, content) {
     spinnerInterval = setInterval(() => {
-        process.stdout.write(`\rGenerating the Page ${pageNumber} Contents of the Magazine... ${spinnerChars[spinnerIndex++]}`);
+        process.stdout.write(`\rGenerating the Page ${pageNumber} ${content}... ${spinnerChars[spinnerIndex++]}`);
         spinnerIndex %= spinnerChars.length;
     }, 100);
 }
