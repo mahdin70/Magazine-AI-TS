@@ -152,6 +152,62 @@ async function appendMessage(pageNumber: number, role: "user" | "ai", content: s
 }
 
 /**
+ * Appends image generation details (imageURL and imagePrompt) to the latestImageGeneration field in MongoDB.
+ * This function updates the conversation context with the image generation data for a specific page.
+ *
+ * @param {number} pageNumber - The page number associated with the image generation.
+ * @param {string} imageURL - The URL of the generated image.
+ * @param {string} imagePrompt - The prompt used to generate the image.
+ * @returns {Promise<void>} A promise that resolves when the image generation details are successfully appended.
+ */
+async function appendImageGeneration(pageNumber: number, imageURL: string, imagePrompt: string): Promise<void> {
+  try {
+    const conversation = await chatCollection.findOne({});
+    const timestamp = new Date();
+
+    const updateOrInsertImageGeneration = (
+      pages: Array<{ pageNumber: number; imageURL: string; imagePrompt: string }>,
+      newPage: { pageNumber: number; imageURL: string; imagePrompt: string }
+    ) => {
+      const pageIndex = pages.findIndex((page) => page.pageNumber === newPage.pageNumber);
+      if (pageIndex > -1) {
+        pages[pageIndex] = newPage;
+      } else {
+        pages.push(newPage);
+      }
+      return pages;
+    };
+
+    if (conversation) {
+      const updates: any = {};
+
+      const imageGenerationEntry = { pageNumber, imageURL, imagePrompt };
+
+      if (!conversation.latestImageGeneration) {
+        updates.latestImageGeneration = { pages: [imageGenerationEntry] };
+      } else {
+        updates["latestImageGeneration.pages"] = updateOrInsertImageGeneration(
+          [...conversation.latestImageGeneration.pages],
+          imageGenerationEntry
+        );
+      }
+
+      await chatCollection.updateOne({}, { $set: { ...updates, updatedAt: timestamp } });
+    } else {
+      const newEntry = {
+        latestImageGeneration: { pages: [{ pageNumber, imageURL, imagePrompt }] },
+        createdAt: timestamp,
+        updatedAt: timestamp,
+      };
+
+      await chatCollection.insertOne(newEntry);
+    }
+  } catch (error) {
+    console.error("Error appending image generation:", error);
+  }
+}
+
+/**
  * Fetches the previous conversation context from MongoDB.
  * This function retrieves the stored conversation details, including prompts, replies, and layout information.
  *
@@ -178,4 +234,4 @@ async function fetchPreviousContext(): Promise<any> {
   }
 }
 
-export { appendMessage, fetchPreviousContext, initMongo };
+export { appendMessage, fetchPreviousContext, initMongo, appendImageGeneration };

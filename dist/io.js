@@ -15,14 +15,35 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.startChat = startChat;
 const readline_1 = __importDefault(require("readline"));
 const pageExtractor_1 = require("./pageExtractor");
-const aiInteraction_1 = require("./aiInteraction");
+const generateContent_1 = require("./generateContent");
 const paginationDBInteraction_1 = require("./paginationDBInteraction");
 const showPreviousContext_1 = require("./showPreviousContext");
+const generateImage_1 = require("./generateImage");
 const rl = readline_1.default.createInterface({
     input: process.stdin,
     output: process.stdout,
     prompt: "User: ",
 });
+function askForImageGeneration() {
+    return __awaiter(this, void 0, void 0, function* () {
+        rl.question("Do you want to generate Images for the magazine also? (Yes/No): ", (answer) => __awaiter(this, void 0, void 0, function* () {
+            if (answer.toLowerCase() === "yes") {
+                console.log("Starting image generation for the magazine...");
+                yield (0, generateImage_1.generateImagesForAllPages)();
+                console.log("Image generation completed.");
+                rl.close();
+            }
+            else if (answer.toLowerCase() === "no") {
+                console.log("Exiting the program.");
+                rl.close();
+            }
+            else {
+                console.log("Invalid input. Please type 'Yes' or 'No'.");
+                askForImageGeneration();
+            }
+        }));
+    });
+}
 function startChat() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -45,7 +66,8 @@ function startChat() {
                     rl.close();
                     return;
                 }
-                yield (0, aiInteraction_1.generateMagazine)(userInput, (pageNumber, content, tokenUsage) => {
+                // Generate the magazine content for the provided user input
+                yield (0, generateContent_1.generateMagazine)(userInput, (pageNumber, content, tokenUsage) => {
                     console.log(`\rPage ${pageNumber} - Magazine-AI: ${content}`);
                     if (tokenUsage) {
                         console.log("===================================================================================");
@@ -56,7 +78,7 @@ function startChat() {
                     console.log("===================================================================================");
                 });
                 console.log("Completed all pages.");
-                rl.prompt();
+                yield askForImageGeneration();
             }));
         }
         catch (error) {

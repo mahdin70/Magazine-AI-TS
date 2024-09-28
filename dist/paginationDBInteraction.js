@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.appendMessage = appendMessage;
 exports.fetchPreviousContext = fetchPreviousContext;
 exports.initMongo = initMongo;
+exports.appendImageGeneration = appendImageGeneration;
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const mongodb_1 = require("mongodb");
@@ -149,6 +150,55 @@ function appendMessage(pageNumber, role, content) {
         }
         catch (error) {
             console.error("Error appending message:", error);
+        }
+    });
+}
+/**
+ * Appends image generation details (imageURL and imagePrompt) to the latestImageGeneration field in MongoDB.
+ * This function updates the conversation context with the image generation data for a specific page.
+ *
+ * @param {number} pageNumber - The page number associated with the image generation.
+ * @param {string} imageURL - The URL of the generated image.
+ * @param {string} imagePrompt - The prompt used to generate the image.
+ * @returns {Promise<void>} A promise that resolves when the image generation details are successfully appended.
+ */
+function appendImageGeneration(pageNumber, imageURL, imagePrompt) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const conversation = yield chatCollection.findOne({});
+            const timestamp = new Date();
+            const updateOrInsertImageGeneration = (pages, newPage) => {
+                const pageIndex = pages.findIndex((page) => page.pageNumber === newPage.pageNumber);
+                if (pageIndex > -1) {
+                    pages[pageIndex] = newPage;
+                }
+                else {
+                    pages.push(newPage);
+                }
+                return pages;
+            };
+            if (conversation) {
+                const updates = {};
+                const imageGenerationEntry = { pageNumber, imageURL, imagePrompt };
+                if (!conversation.latestImageGeneration) {
+                    updates.latestImageGeneration = { pages: [imageGenerationEntry] };
+                }
+                else {
+                    updates["latestImageGeneration.pages"] = updateOrInsertImageGeneration([...conversation.latestImageGeneration.pages], imageGenerationEntry);
+                }
+                yield chatCollection.updateOne({}, { $set: Object.assign(Object.assign({}, updates), { updatedAt: timestamp }) });
+            }
+            else {
+                const newEntry = {
+                    latestImageGeneration: { pages: [{ pageNumber, imageURL, imagePrompt }] },
+                    createdAt: timestamp,
+                    updatedAt: timestamp,
+                };
+                yield chatCollection.insertOne(newEntry);
+            }
+        }
+        catch (error) {
+            console.error("Error appending image generation:", error);
         }
     });
 }

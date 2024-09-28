@@ -8,7 +8,6 @@ import { getTotalPages } from "./pageExtractor";
 
 import dotenv from "dotenv";
 dotenv.config();
-
 const openaiApiKey: string = process.env.OPENAI_API_KEY!;
 
 /**
@@ -16,9 +15,7 @@ const openaiApiKey: string = process.env.OPENAI_API_KEY!;
  * and handling pagination for multiple pages.
  *
  * @param userInput - The input provided by the user for content generation.
- * @param callback - A callback function that is invoked after each page is generated.
- *                    It receives the page number, generated content, and token usage metadata.
- *
+ * @param callback - A callback function that is invoked after each page is generated.It receives the page number, generated content, and token usage metadata.
  * @returns A promise that resolves when the content generation is complete.
  */
 export async function generateMagazine(
@@ -34,14 +31,12 @@ export async function generateMagazine(
     presencePenalty: 0.8,
   });
 
-  // Initialize in-memory message history to track conversation context
   const history = new InMemoryChatMessageHistory();
 
   const totalPages = getTotalPages();
 
-  // Loop through each page number for content generation
   for (let pageNumber = 1; pageNumber <= totalPages; pageNumber++) {
-    startSpinner(pageNumber, "Contents of the Magazine"); // Start the spinner for content generation
+    startSpinner(pageNumber, "Contents of the Magazine");
 
     const systemMessage = getPaginationSystemMessage(pageNumber);
     history.addMessage(systemMessage); // Add system message to history
