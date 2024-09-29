@@ -22,7 +22,6 @@ const spinner_1 = require("./spinner");
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const openaiApiKey = process.env.OPENAI_API_KEY;
-// Initialize the LangChain LLM instance
 const llm = new openai_1.ChatOpenAI({
     model: "gpt-4o-mini",
     openAIApiKey: openaiApiKey,
@@ -55,7 +54,7 @@ function generatePrompt(parsedContent, pageNumber) {
             });
             history.addMessage(systemMessage);
             const userMessage = new messages_1.HumanMessage({
-                content: `Generate a detailed and realistic image prompt based on the following content, focusing on lifelike elements, textures, and natural lighting: ${parsedContent}`,
+                content: `Generate a detailed and realistic image prompt based on the following content, focusing on lifelike elements, textures, and lighting: ${parsedContent}`
             });
             history.addMessage(userMessage);
             const response = yield llm.invoke(yield history.getMessages());

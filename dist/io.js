@@ -66,7 +66,6 @@ function startChat() {
                     rl.close();
                     return;
                 }
-                // Generate the magazine content for the provided user input
                 yield (0, generateContent_1.generateMagazine)(userInput, (pageNumber, content, tokenUsage) => {
                     console.log(`\rPage ${pageNumber} - Magazine-AI: ${content}`);
                     if (tokenUsage) {

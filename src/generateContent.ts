@@ -47,9 +47,6 @@ export async function generateMagazine(
     try {
       // Construct the message array from history and invoke the OpenAI model
       const messages = (await history.getMessages())
-        .map((message) => message.content)
-        .filter((content): content is string => typeof content === "string");
-
       const response = await llm.invoke(messages);
       const content = Array.isArray(response.content) ? response.content.map((item: any) => item.text).join(" ") : response.content;
 

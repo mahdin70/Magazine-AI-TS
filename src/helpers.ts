@@ -34,7 +34,6 @@ function parsePageContent(content: string): string {
  */
 async function generatePrompt(parsedContent: string, pageNumber: number): Promise<string> {
   const history = new InMemoryChatMessageHistory();
-
   try {
     startSpinner(pageNumber, "Image Generating Prompt");
 

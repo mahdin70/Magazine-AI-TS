@@ -56,7 +56,6 @@ function generateImage(refinedPrompt, pageNumber) {
 }
 function generateImagesForAllPages() {
     return __awaiter(this, void 0, void 0, function* () {
-        yield (0, paginationDBInteraction_1.initMongo)();
         const context = yield (0, paginationDBInteraction_1.fetchPreviousContext)();
         if (context.latestAIReply && context.latestAIReply.pages.length > 0) {
             const pages = context.latestAIReply.pages;

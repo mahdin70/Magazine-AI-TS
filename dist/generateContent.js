@@ -42,12 +42,10 @@ function generateMagazine(userInput, callback) {
             topP: 0.5,
             presencePenalty: 0.8,
         });
-        // Initialize in-memory message history to track conversation context
         const history = new chat_history_1.InMemoryChatMessageHistory();
         const totalPages = (0, pageExtractor_1.getTotalPages)();
-        // Loop through each page number for content generation
         for (let pageNumber = 1; pageNumber <= totalPages; pageNumber++) {
-            (0, spinner_1.startSpinner)(pageNumber, "Contents of the Magazine"); // Start the spinner for content generation
+            (0, spinner_1.startSpinner)(pageNumber, "Contents of the Magazine");
             const systemMessage = (0, paginationSystemMessage_1.getPaginationSystemMessage)(pageNumber);
             history.addMessage(systemMessage); // Add system message to history
             const userMessage = new messages_1.HumanMessage(userInput);
@@ -55,9 +53,7 @@ function generateMagazine(userInput, callback) {
             yield (0, paginationDBInteraction_1.appendMessage)(pageNumber, "user", userInput); // Append user message to the database
             try {
                 // Construct the message array from history and invoke the OpenAI model
-                const messages = (yield history.getMessages())
-                    .map((message) => message.content)
-                    .filter((content) => typeof content === "string");
+                const messages = (yield history.getMessages());
                 const response = yield llm.invoke(messages);
                 const content = Array.isArray(response.content) ? response.content.map((item) => item.text).join(" ") : response.content;
                 const aiMessage = new messages_1.AIMessage(content);
