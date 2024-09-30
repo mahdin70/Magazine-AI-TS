@@ -1,15 +1,48 @@
-Use the Command to install all project dependencies 
+# AI-Magazine Generator
 
-npm i 
+This project generates magazine content using AI with layout details extracted from analyzed JSON files, creating structured and consistent content based on page-by-page layout information.
 
-Create a .env file in the root directory and insert these values there :
-OPENAI_API_KEY = xxxxxxxxxxxxxxxxx
-MONGO_URI = xxxxxxxxxx
+## Getting Started
 
-Update the analyzed file path in pageExtractor.ts. This should be the location of your analyzed JSON File : 
-const filePath: string = "F:/Artisan/Magazine-AI-TS/Texract-JSON/MedicalAnalyzeDocResponse.json";
+### Prerequisites
 
-Now you are all set to go :
-To run the project use this command : 
-npm start or npm run dev
+- Node.js
+- npm
+- OpenAI API Key
+- MongoDB Atlas URI
 
+### Installation
+
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/mahdin70/Magazine-AI-TS.git
+   cd Magazine-AI-TS
+   ```
+
+2. Install all project dependencies:
+
+   ```bash
+   npm i
+   ```
+
+3. Create a `.env` file in the root directory with the following values:
+
+   ```
+   OPENAI_API_KEY = xxxxxxxxxxxxxxxxx
+   MONGO_URI = xxxxxxxxxx
+   ```
+
+4. Update the analyzed JSON file path in `pageExtractor.ts` to point to your local JSON file:
+
+   ```typescript
+   const filePath: string = "F:/Artisan/Magazine-AI-TS/Texract-JSON/MedicalAnalyzeDocResponse.json";
+   ```
+
+### Running the Project
+
+To run the project, use one of the following commands:
+
+```bash
+npm start
+```
