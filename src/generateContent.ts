@@ -1,8 +1,8 @@
 import { ChatOpenAI } from "@langchain/openai";
 import { HumanMessage, AIMessage } from "@langchain/core/messages";
 import { InMemoryChatMessageHistory } from "@langchain/core/chat_history";
-import { appendMessage } from "./paginationDBInteraction";
-import { getPaginationSystemMessage } from "./paginationSystemMessage";
+import { appendMessage } from "./DBInteraction";
+import { getPaginationSystemMessage } from "./systemMessage";
 import { startSpinner, stopSpinner } from "./spinner";
 import { getTotalPages } from "./pageExtractor";
 

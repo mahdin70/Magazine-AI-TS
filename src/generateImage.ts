@@ -1,7 +1,7 @@
 import { OpenAI } from "openai";
 import fs from "fs";
 import path from "path";
-import { fetchPreviousContext, initMongo, appendImageGeneration } from "./paginationDBInteraction";
+import { fetchPreviousContext, initMongo, appendImageGeneration } from "./DBInteraction";
 import { startSpinner, stopSpinner } from "./spinner";
 import { parsePageContent, generatePrompt, generateRandomNumber } from "./helpers";
 
@@ -16,6 +16,15 @@ const openai = new OpenAI({
   apiKey: OPENAI_API_KEY,
 });
 
+
+/**
+*Generates an image using OpenAI's DALL-E model based on the refined prompt and saves it to the file system.
+* 
+* @param refinedPrompt - The refined prompt to generate the image.
+* @param pageNumber - The page number associated with the image being generated.
+* 
+* @returns A promise that resolves when the image is generated and saved, or throws an error if the process fails.
+*/
 async function generateImage(refinedPrompt: string, pageNumber: number): Promise<void> {
   try {
     startSpinner(pageNumber, "Image");
@@ -45,6 +54,12 @@ async function generateImage(refinedPrompt: string, pageNumber: number): Promise
   }
 }
 
+
+/**
+ * Processes all the pages from the latest AI response, generates prompts for each page, and generates an image for each one.
+ * 
+ * @returns A promise that resolves when all images are generated for all pages or logs an error if something goes wrong.
+ */
 async function generateImagesForAllPages(): Promise<void> {
   const context = await fetchPreviousContext();
 

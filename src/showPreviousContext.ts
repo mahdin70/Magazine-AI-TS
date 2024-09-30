@@ -1,4 +1,4 @@
-import { fetchPreviousContext } from "./paginationDBInteraction";
+import { fetchPreviousContext } from "./DBInteraction";
 
 export async function showPreviousContext(): Promise<{ latestUserPrompt: string; latestAIReply: string } | null> {
   const previousContext = await fetchPreviousContext();

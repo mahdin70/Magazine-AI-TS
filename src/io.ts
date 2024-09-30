@@ -1,7 +1,7 @@
 import readline from "readline";
 import { getTotalPages } from "./pageExtractor";
 import { generateMagazine } from "./generateContent";
-import { initMongo } from "./paginationDBInteraction";
+import { initMongo } from "./DBInteraction";
 import { showPreviousContext } from "./showPreviousContext";
 import { generateImagesForAllPages } from "./generateImage";
 
