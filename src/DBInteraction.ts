@@ -83,9 +83,9 @@ async function appendMessage(pageNumber: number, role: "user" | "ai", content: s
 
       if (role === "user") {
         if (!conversation.firstUserPrompt) {
-          updates.firstUserPrompt = content; // Store first user prompt if not already present
+          updates.firstUserPrompt = content; 
         }
-        updates.latestUserPrompt = content; // Update latest user prompt
+        updates.latestUserPrompt = content;
       }
 
       if (role === "ai") {

@@ -39,10 +39,10 @@ export async function generateMagazine(
     startSpinner(pageNumber, "Contents of the Magazine");
 
     const systemMessage = getPaginationSystemMessage(pageNumber);
-    history.addMessage(systemMessage); // Add system message to history
+    history.addMessage(systemMessage); 
     const userMessage = new HumanMessage(userInput);
-    history.addMessage(userMessage); // Add user message to history
-    await appendMessage(pageNumber, "user", userInput); // Append user message to the database
+    history.addMessage(userMessage);
+    await appendMessage(pageNumber, "user", userInput);
 
     try {
       // Construct the message array from history and invoke the OpenAI model
@@ -51,12 +51,12 @@ export async function generateMagazine(
       const content = Array.isArray(response.content) ? response.content.map((item: any) => item.text).join(" ") : response.content;
 
       const aiMessage = new AIMessage(content);
-      history.addMessage(aiMessage); // Add AI response to history
-      await appendMessage(pageNumber, "ai", content); // Append AI response to the database
-      const tokenUsage = response.usage_metadata; // Retrieve token usage metadata
+      history.addMessage(aiMessage); 
+      await appendMessage(pageNumber, "ai", content); 
+      const tokenUsage = response.usage_metadata;
 
       stopSpinner();
-      callback(pageNumber, content, tokenUsage); // Call the callback function with generated data
+      callback(pageNumber, content, tokenUsage);
     } catch (error) {
       console.error(`Error generating content for page ${pageNumber}:`, error);
       stopSpinner();

@@ -18,7 +18,7 @@ const openai = new OpenAI({
 
 
 /**
-*Generates an image using OpenAI's DALL-E model based on the refined prompt and saves it to the file system.
+*Generates an image using OpenAI's DALL-E-3 model based on the refined prompt and saves it to the file system.
 * 
 * @param refinedPrompt - The refined prompt to generate the image.
 * @param pageNumber - The page number associated with the image being generated.
