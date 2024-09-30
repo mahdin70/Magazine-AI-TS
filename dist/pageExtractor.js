@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getTextFromLayoutForPage = exports.getLayoutDetailsForPage = exports.getTotalPages = exports.getWordCountFromParent = exports.getWordCountFromLine = exports.getBlockById = void 0;
 const fs_1 = __importDefault(require("fs"));
-const filePath = "F:/Artisan/Magazine-AI-TS/Texract-JSON/MedicalAnalyzeDocResponse.json";
+const filePath = "D:/Artisan/Magazine-AI-TS/Texract-JSON/MedicalAnalyzeDocResponse.json";
 /**
  * Loads the data from a JSON file containing Textract-analyzed blocks.
  * @returns An object with an array of Block objects parsed from the JSON file.

@@ -16,7 +16,7 @@ exports.generateImagesForAllPages = generateImagesForAllPages;
 const openai_1 = require("openai");
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
-const paginationDBInteraction_1 = require("./paginationDBInteraction");
+const DBInteraction_1 = require("./DBInteraction");
 const spinner_1 = require("./spinner");
 const helpers_1 = require("./helpers");
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
@@ -27,6 +27,14 @@ if (!fs_1.default.existsSync(OUTPUT_DIR)) {
 const openai = new openai_1.OpenAI({
     apiKey: OPENAI_API_KEY,
 });
+/**
+*Generates an image using OpenAI's DALL-E-3 model based on the refined prompt and saves it to the file system.
+*
+* @param refinedPrompt - The refined prompt to generate the image.
+* @param pageNumber - The page number associated with the image being generated.
+*
+* @returns A promise that resolves when the image is generated and saved, or throws an error if the process fails.
+*/
 function generateImage(refinedPrompt, pageNumber) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -46,7 +54,7 @@ function generateImage(refinedPrompt, pageNumber) {
             const imageFileName = path_1.default.join(OUTPUT_DIR, `Magazine-${(0, helpers_1.generateRandomNumber)()}-Page_${pageNumber}.png`);
             fs_1.default.writeFileSync(imageFileName, Buffer.from(imageBuffer));
             console.log(`Image for page ${pageNumber} saved to ${imageFileName}`);
-            yield (0, paginationDBInteraction_1.appendImageGeneration)(pageNumber, imageUrl, refinedPrompt);
+            yield (0, DBInteraction_1.appendImageGeneration)(pageNumber, imageUrl, refinedPrompt);
             (0, spinner_1.stopSpinner)();
         }
         catch (error) {
@@ -54,9 +62,14 @@ function generateImage(refinedPrompt, pageNumber) {
         }
     });
 }
+/**
+ * Processes all the pages from the latest AI response, generates prompts for each page, and generates an image for each one.
+ *
+ * @returns A promise that resolves when all images are generated for all pages or logs an error if something goes wrong.
+ */
 function generateImagesForAllPages() {
     return __awaiter(this, void 0, void 0, function* () {
-        const context = yield (0, paginationDBInteraction_1.fetchPreviousContext)();
+        const context = yield (0, DBInteraction_1.fetchPreviousContext)();
         if (context.latestAIReply && context.latestAIReply.pages.length > 0) {
             const pages = context.latestAIReply.pages;
             for (let i = 0; i < pages.length; i++) {

@@ -10,10 +10,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.showPreviousContext = showPreviousContext;
-const paginationDBInteraction_1 = require("./paginationDBInteraction");
+const DBInteraction_1 = require("./DBInteraction");
 function showPreviousContext() {
     return __awaiter(this, void 0, void 0, function* () {
-        const previousContext = yield (0, paginationDBInteraction_1.fetchPreviousContext)();
+        const previousContext = yield (0, DBInteraction_1.fetchPreviousContext)();
         if (previousContext) {
             const latestUserPrompt = previousContext.latestUserPrompt || "";
             const latestAIReply = previousContext.latestAIReply

@@ -16,8 +16,8 @@ exports.generateMagazine = generateMagazine;
 const openai_1 = require("@langchain/openai");
 const messages_1 = require("@langchain/core/messages");
 const chat_history_1 = require("@langchain/core/chat_history");
-const paginationDBInteraction_1 = require("./paginationDBInteraction");
-const paginationSystemMessage_1 = require("./paginationSystemMessage");
+const DBInteraction_1 = require("./DBInteraction");
+const systemMessage_1 = require("./systemMessage");
 const spinner_1 = require("./spinner");
 const pageExtractor_1 = require("./pageExtractor");
 const dotenv_1 = __importDefault(require("dotenv"));
@@ -46,22 +46,22 @@ function generateMagazine(userInput, callback) {
         const totalPages = (0, pageExtractor_1.getTotalPages)();
         for (let pageNumber = 1; pageNumber <= totalPages; pageNumber++) {
             (0, spinner_1.startSpinner)(pageNumber, "Contents of the Magazine");
-            const systemMessage = (0, paginationSystemMessage_1.getPaginationSystemMessage)(pageNumber);
-            history.addMessage(systemMessage); // Add system message to history
+            const systemMessage = (0, systemMessage_1.getPaginationSystemMessage)(pageNumber);
+            history.addMessage(systemMessage);
             const userMessage = new messages_1.HumanMessage(userInput);
-            history.addMessage(userMessage); // Add user message to history
-            yield (0, paginationDBInteraction_1.appendMessage)(pageNumber, "user", userInput); // Append user message to the database
+            history.addMessage(userMessage);
+            yield (0, DBInteraction_1.appendMessage)(pageNumber, "user", userInput);
             try {
                 // Construct the message array from history and invoke the OpenAI model
                 const messages = (yield history.getMessages());
                 const response = yield llm.invoke(messages);
                 const content = Array.isArray(response.content) ? response.content.map((item) => item.text).join(" ") : response.content;
                 const aiMessage = new messages_1.AIMessage(content);
-                history.addMessage(aiMessage); // Add AI response to history
-                yield (0, paginationDBInteraction_1.appendMessage)(pageNumber, "ai", content); // Append AI response to the database
-                const tokenUsage = response.usage_metadata; // Retrieve token usage metadata
+                history.addMessage(aiMessage);
+                yield (0, DBInteraction_1.appendMessage)(pageNumber, "ai", content);
+                const tokenUsage = response.usage_metadata;
                 (0, spinner_1.stopSpinner)();
-                callback(pageNumber, content, tokenUsage); // Call the callback function with generated data
+                callback(pageNumber, content, tokenUsage);
             }
             catch (error) {
                 console.error(`Error generating content for page ${pageNumber}:`, error);

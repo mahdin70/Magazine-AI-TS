@@ -1,6 +1,6 @@
 import fs from "fs";
 
-const filePath: string = "F:/Artisan/Magazine-AI-TS/Texract-JSON/MedicalAnalyzeDocResponse.json";
+const filePath: string = "D:/Artisan/Magazine-AI-TS/Texract-JSON/MedicalAnalyzeDocResponse.json";
 interface Block {
   Id: string;
   BlockType: string;

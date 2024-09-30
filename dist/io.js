@@ -16,7 +16,7 @@ exports.startChat = startChat;
 const readline_1 = __importDefault(require("readline"));
 const pageExtractor_1 = require("./pageExtractor");
 const generateContent_1 = require("./generateContent");
-const paginationDBInteraction_1 = require("./paginationDBInteraction");
+const DBInteraction_1 = require("./DBInteraction");
 const showPreviousContext_1 = require("./showPreviousContext");
 const generateImage_1 = require("./generateImage");
 const rl = readline_1.default.createInterface({
@@ -47,7 +47,7 @@ function askForImageGeneration() {
 function startChat() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            yield (0, paginationDBInteraction_1.initMongo)();
+            yield (0, DBInteraction_1.initMongo)();
             const previousContext = yield (0, showPreviousContext_1.showPreviousContext)();
             if (previousContext) {
                 const { latestUserPrompt, latestAIReply } = previousContext;
