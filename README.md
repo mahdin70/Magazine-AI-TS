@@ -1,12 +1,13 @@
 # AI-Magazine Generator
 
-This project generates magazine content using AI with layout details extracted from analyzed JSON files, creating structured and consistent content based on page-by-page layout information.
+This project generates magazine content (both text and image) using OpenAI API with layout details extracted from analyzed JSON files, creating structured and consistent content based on page-by-page layout information.
 
 ## Getting Started
 
 ### Prerequisites
 
 - Node.js
+- TypeScript
 - npm
 - OpenAI API Key
 - MongoDB Atlas URI
@@ -33,7 +34,7 @@ This project generates magazine content using AI with layout details extracted f
    MONGO_URI = xxxxxxxxxx
    ```
 
-4. Update the analyzed JSON file path in `pageExtractor.ts` to point to your local JSON file:
+4. Update the analyzed JSON file path in `pageExtractor.ts` to point to your local JSON file (The JSON file shold be extracted by Amazon Textract since the extraction scripts are written based on the Textract Format):
 
    ```typescript
    const filePath: string = "F:/Artisan/Magazine-AI-TS/Texract-JSON/MedicalAnalyzeDocResponse.json";
